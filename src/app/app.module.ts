@@ -7,7 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {NewWorkoutPage} from "../pages/new-workout/new-workout";
-import {WorkoutService} from "../services/workout.service";
+import {WorkoutService} from "../services/mockworkout.service";
 import {WorkoutPage} from "../pages/workout/workout";
 
 @NgModule({

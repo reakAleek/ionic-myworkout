@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
-import {WorkoutService} from "../../services/workout.service";
+import {WorkoutService} from "../../services/mockworkout.service";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from 'moment/moment';
 import {Workout} from "../../models/workout.interface";
@@ -31,15 +31,6 @@ export class NewWorkoutPage {
   ) {
     this.workoutForm = this.initForm();
     this.sets = <FormArray>this.workoutForm.controls['sets'];
-
-    if (!!navParams.get("id")) {
-      let workout = this.workoutService.getWorkout(navParams.get("id"));
-      this.workoutForm.get("id").setValue(workout.id);
-      this.workoutForm.get("name").setValue(workout.name);
-      workout.sets.forEach(i => {
-
-      });
-    }
   }
 
   ionViewDidLoad() {
@@ -107,7 +98,9 @@ export class NewWorkoutPage {
         i.duration = this.generateDuration(0,0);
       }
     });
-    this.workoutService.addWorkout(workout);
-    this.navCtrl.pop();
+    this.workoutService.addWorkout(workout).subscribe(
+      success => { this.navCtrl.pop() },
+      error => { console.log(error) }
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {WorkoutService} from "../../services/workout.service";
+import {WorkoutService} from "../../services/mockworkout.service";
 import {Workout} from "../../models/workout.interface";
 import {Set} from "../../models/set.interface";
 import * as moment from 'moment/moment';
@@ -33,13 +33,14 @@ export class WorkoutPage {
 
   fetchData() {
     clearInterval(this.interval);
-    this.workout = this.deepCopy(this.workoutService.getWorkout(this.navParams.get("id")));
-    this.sets = this.deepCopy(this.workout.sets.map(i => ({isActive: false, set: i})));
+
+    this.workoutService.getWorkout(this.navParams.get('id')).subscribe(
+      data => {
+        this.workout = data;
+        this.sets = data.sets.map(i => ({isActive: false, set: i}));
+      });
   }
 
-  deepCopy<T>(o: T) : T {
-    return JSON.parse(JSON.stringify(o));
-  }
 
   ionViewDidLoad() {
   }

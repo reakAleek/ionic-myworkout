@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import {NewWorkoutPage} from "../new-workout/new-workout";
-import {WorkoutService} from "../../services/workout.service";
+import {WorkoutService} from "../../services/mockworkout.service";
 import {Workout} from "../../models/workout.interface";
 import {WorkoutPage} from "../workout/workout";
 
@@ -18,14 +18,18 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
-    this.workouts = this.workoutService.getWorkouts();
+    this.workoutService.getWorkouts().subscribe(data => { this.workouts = data });
   }
 
 
 
   deleteWorkout(index) {
-    this.workoutService.deleteWorkout(this.workouts[index].id);
-    this.workouts.splice(index, 1);
+
+    this.workoutService.deleteWorkout(this.workouts[index].id)
+      .subscribe(
+        success => { this.workouts.splice(index, 1); },
+        error => { console.log(error) }
+      );
   }
 
   onNavigateToAddWorkout(index: number = null) {
