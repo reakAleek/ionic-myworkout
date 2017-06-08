@@ -36,11 +36,14 @@ export class WorkoutPage {
 
     this.workoutService.getWorkout(this.navParams.get('id')).subscribe(
       data => {
-        this.workout = data;
-        this.sets = data.sets.map(i => ({isActive: false, set: i}));
+        this.workout = this.deepCopy(data);
+        this.sets = this.deepCopy(data.sets.map(i => ({isActive: false, set: i})));
       });
   }
 
+  deepCopy<T>(o: T) : T {
+    return JSON.parse(JSON.stringify(o));
+  }
 
   ionViewDidLoad() {
   }
