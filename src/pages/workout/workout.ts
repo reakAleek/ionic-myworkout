@@ -1,0 +1,89 @@
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {WorkoutService} from "../../services/workout.service";
+import {Workout} from "../../models/workout.interface";
+import {Set} from "../../models/set.interface";
+import * as moment from 'moment/moment';
+
+/**
+ * Generated class for the WorkoutPage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
+@Component({
+  selector: 'page-workout',
+  templateUrl: 'workout.html',
+})
+export class WorkoutPage {
+
+  private workout: Workout;
+  private sets: { isActive: boolean, set: Set}[];
+  private currentIndex: number = 0;
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private workoutService: WorkoutService) {
+  }
+
+  ionViewWillEnter() {
+    this.workout = this.deepCopy(this.workoutService.getWorkout(this.navParams.get("id")));
+    this.sets = this.deepCopy(this.workout.sets.map(i => ({isActive: false, set: i})));
+  }
+
+  deepCopy<T>(o: T) : T {
+    return JSON.parse(JSON.stringify(o));
+  }
+
+  ionViewDidLoad() {
+    //console.log('ionViewDidLoad WorkoutPage');
+  }
+
+  reorderItems(indexes) {
+    let element = this.sets[indexes.from];
+    this.sets.splice(indexes.from, 1);
+    this.sets.splice(indexes.to, 0, element);
+    this.reorderModel(indexes);
+  }
+
+  reorderModel(indexes) {
+    let el = this.workout.sets[indexes.from];
+    this.workout.sets.splice(indexes.from, 1);
+    this.workout.sets.splice(indexes.to, 0, el);
+    this.workoutService.saveWorkout(this.workout);
+  }
+
+  calculateDuration(ISOString: string): number {
+    let time = moment(ISOString);
+    let duration = moment.duration({minutes: time.minutes(), seconds: time.seconds()});
+    return duration.asMilliseconds();
+  }
+
+  decrementDuration(set: Set): boolean {
+    if (this.calculateDuration(set.duration) > 0) {
+      set.duration = moment(set.duration).subtract(1, 'seconds').format();
+      return true;
+    }
+    return false;
+  }
+
+  onStartWorkout() {
+
+    this.sets[0].isActive = true;
+
+    let interval = setInterval(() => {
+      if (this.currentIndex < this.sets.length && !this.decrementDuration(this.sets[this.currentIndex].set)) {
+        if (this.currentIndex >= this.sets.length) {
+          clearInterval(interval);
+        } else {
+          this.sets[this.currentIndex++].isActive = false;
+          if (this.currentIndex < this.sets.length) {
+            this.sets[this.currentIndex].isActive = true;
+          }
+
+        }
+      }
+    }, 1000);
+  }
+
+}

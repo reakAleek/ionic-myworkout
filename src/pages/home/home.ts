@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import {NewWorkoutPage} from "../new-workout/new-workout";
+import {WorkoutService} from "../../services/workout.service";
+import {Workout} from "../../models/workout.interface";
+import {WorkoutPage} from "../workout/workout";
 
 @Component({
   selector: 'page-home',
@@ -7,8 +11,28 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  workouts: Workout[] = [];
+
+  constructor(public navCtrl: NavController, private workoutService: WorkoutService) {
 
   }
 
+  ionViewWillEnter() {
+    this.workouts = this.workoutService.getWorkouts();
+  }
+
+
+
+  deleteWorkout(index) {
+    this.workoutService.deleteWorkout(this.workouts[index].id);
+    this.workouts.splice(index, 1);
+  }
+
+  onNavigateToAddWorkout() {
+    this.navCtrl.push(NewWorkoutPage);
+  }
+
+  onNavigateToWorkout(index: number) {
+    this.navCtrl.push(WorkoutPage, {id: this.workouts[index].id});
+  }
 }

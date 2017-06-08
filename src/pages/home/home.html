@@ -1,14 +1,26 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onNavigateToAddWorkout()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>
-      Ionic Blank
+      My Workouts
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <ion-list>
+    <ion-item-sliding *ngFor="let workout of workouts; let i = index">
+      <button ion-item (click)="onNavigateToWorkout(i)">
+          {{ workout.name }}
+      </button>
+      <ion-item-options>
+        <button color="energized" (click)="deleteWorkout(i)" ion-button><ion-icon name="create"></ion-icon> Edit</button>
+        <button color="danger" (click)="deleteWorkout(i)" ion-button><ion-icon name="trash"></ion-icon> Delete</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
