@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import {NewWorkoutPage} from "../pages/new-workout/new-workout";
 import {WorkoutService} from "../services/mockworkout.service";
 import {WorkoutPage} from "../pages/workout/workout";
+import {RealWorkoutService} from "../services/workout.service";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {WorkoutPage} from "../pages/workout/workout";
     StatusBar,
     SplashScreen,
     WorkoutService,
+    RealWorkoutService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

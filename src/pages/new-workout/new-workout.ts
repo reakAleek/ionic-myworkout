@@ -69,6 +69,12 @@ export class NewWorkoutPage {
     return duration.toISOString();
   }
 
+  reorderItems(indexes) {
+    /*let element = this.sets[indexes.from];
+    this.sets.splice(indexes.from, 1);
+    this.sets.splice(indexes.to, 0, element);*/
+  }
+
   initSet(set: Set = null) {
 
     let result = this.formBuilder.group({
