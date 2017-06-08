@@ -7,6 +7,11 @@
 <ion-header>
 
   <ion-navbar>
+    <ion-buttons end>
+      <button (click)="fetchData()" ion-button icon-only clear>
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>{{workout?.name}}</ion-title>
   </ion-navbar>
 
@@ -15,16 +20,16 @@
 
 <ion-content>
   <ion-list reorder="true" (ionItemReorder)="reorderItems($event)">
-    <ion-item *ngFor="let set of sets" [color]="set.isActive ? 'dark' : 'default'">
-      {{set.set.exercise.name}} - {{set.isActive}}
-      <ion-badge item-end>{{set.set.duration | date:'mm:ss'}}</ion-badge>
+    <ion-item *ngFor="let set of sets" [color]="set.isActive ? 'danger' : 'default'">
+      {{set.set.exercise.name}}
+      <ion-badge item-end [color]="set.isActive ? 'dark' : 'default'">{{set.set.duration | date:'mm:ss'}}</ion-badge>
     </ion-item>
   </ion-list>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
-      <button (click)="onStartWorkout()" ion-button icon-only block clear color="dark">
+      <button (click)="onStartWorkout()" ion-button icon-only clear block color="dark">
         <ion-icon name="play"></ion-icon>
       </button>
   </ion-toolbar>

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController} from 'ionic-angular';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {WorkoutService} from "../../services/workout.service";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from 'moment/moment';
 import {Workout} from "../../models/workout.interface";
+import {Set} from "../../models/set.interface";
+import {Exercise} from "../../models/exercise.interface";
 /**
  * Generated class for the NewWorkoutPage page.
  *
@@ -24,15 +26,23 @@ export class NewWorkoutPage {
   constructor(
     private workoutService: WorkoutService,
     private navCtrl: NavController,
+    private navParams: NavParams,
     private formBuilder: FormBuilder
   ) {
     this.workoutForm = this.initForm();
     this.sets = <FormArray>this.workoutForm.controls['sets'];
+
+    if (!!navParams.get("id")) {
+      let workout = this.workoutService.getWorkout(navParams.get("id"));
+      this.workoutForm.get("id").setValue(workout.id);
+      this.workoutForm.get("name").setValue(workout.name);
+      workout.sets.forEach(i => {
+
+      });
+    }
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NewWorkoutPage');
-    console.log(this.generateDuration(0,0));
   }
 
   initForm(): FormGroup {
@@ -53,23 +63,37 @@ export class NewWorkoutPage {
     return duration.toISOString();
   }
 
-  initSet() {
-    return this.formBuilder.group({
+  initSet(set: Set = null) {
+
+    let result = this.formBuilder.group({
       exercise: this.initExercise(),
       duration: this.generateDuration(0,0),
     });
+
+    if (set != null) {
+      result.get("exercise").setValue(set.exercise);
+    }
+
+    return result;
   }
 
-  initExercise() {
-    return this.formBuilder.group({
+  initExercise(exercise: Exercise = null) {
+
+    let result = this.formBuilder.group({
       name: ['', Validators.required]
     });
+
+    if (exercise != null) {
+      result.get("name").setValue(exercise.name);
+    }
+
+    return result;
   }
 
 
 
-  addSet() {
-    this.sets.push(this.initSet());
+  addSet(set: Set = null) {
+    this.sets.push(this.initSet(set));
   }
 
   removeSet(i: number) {

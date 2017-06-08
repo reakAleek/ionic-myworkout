@@ -21,12 +21,18 @@ export class WorkoutPage {
   private workout: Workout;
   private sets: { isActive: boolean, set: Set}[];
   private currentIndex: number = 0;
+  private interval: any;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private workoutService: WorkoutService) {
   }
 
   ionViewWillEnter() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    clearInterval(this.interval);
     this.workout = this.deepCopy(this.workoutService.getWorkout(this.navParams.get("id")));
     this.sets = this.deepCopy(this.workout.sets.map(i => ({isActive: false, set: i})));
   }
@@ -36,7 +42,6 @@ export class WorkoutPage {
   }
 
   ionViewDidLoad() {
-    //console.log('ionViewDidLoad WorkoutPage');
   }
 
   reorderItems(indexes) {
@@ -67,14 +72,18 @@ export class WorkoutPage {
     return false;
   }
 
+  reset() {
+    this.currentIndex = 0;
+    this.fetchData();
+  }
+
   onStartWorkout() {
-
+    this.reset();
     this.sets[0].isActive = true;
-
-    let interval = setInterval(() => {
+    this.interval = setInterval(() => {
       if (this.currentIndex < this.sets.length && !this.decrementDuration(this.sets[this.currentIndex].set)) {
         if (this.currentIndex >= this.sets.length) {
-          clearInterval(interval);
+          clearInterval(this.interval);
         } else {
           this.sets[this.currentIndex++].isActive = false;
           if (this.currentIndex < this.sets.length) {

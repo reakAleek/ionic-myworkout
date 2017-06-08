@@ -28,8 +28,15 @@ export class HomePage {
     this.workouts.splice(index, 1);
   }
 
-  onNavigateToAddWorkout() {
-    this.navCtrl.push(NewWorkoutPage);
+  onNavigateToAddWorkout(index: number = null) {
+
+    if (index == null) {
+      this.navCtrl.push(NewWorkoutPage);
+    }
+    else {
+      this.navCtrl.push(NewWorkoutPage, {id: this.workouts[index].id});
+    }
+
   }
 
   onNavigateToWorkout(index: number) {

@@ -11,14 +11,14 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
   <ion-list>
     <ion-item-sliding *ngFor="let workout of workouts; let i = index">
       <button ion-item (click)="onNavigateToWorkout(i)">
           {{ workout.name }}
       </button>
       <ion-item-options>
-        <button color="energized" (click)="deleteWorkout(i)" ion-button><ion-icon name="create"></ion-icon> Edit</button>
+        <button color="energized" (click)="onNavigateToAddWorkout(i)" ion-button><ion-icon name="create"></ion-icon> Edit</button>
         <button color="danger" (click)="deleteWorkout(i)" ion-button><ion-icon name="trash"></ion-icon> Delete</button>
       </ion-item-options>
     </ion-item-sliding>
