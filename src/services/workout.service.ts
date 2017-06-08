@@ -1,12 +1,12 @@
 import {Observable} from "rxjs";
 import {Workout} from "../models/workout.interface";
 import {Http, Response, RequestOptions, Headers} from "@angular/http";
+import {Injectable} from "@angular/core";
 
 /**
  * Created by jancalanog on 08.06.17.
  */
-
-
+@Injectable()
 export class RealWorkoutService {
   private readonly url = 'http://localhost:8080/mw/webapi/workouts/';
 

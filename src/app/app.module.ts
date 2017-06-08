@@ -10,6 +10,7 @@ import {NewWorkoutPage} from "../pages/new-workout/new-workout";
 import {WorkoutService} from "../services/mockworkout.service";
 import {WorkoutPage} from "../pages/workout/workout";
 import {RealWorkoutService} from "../services/workout.service";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {RealWorkoutService} from "../services/workout.service";
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -32,8 +34,7 @@ import {RealWorkoutService} from "../services/workout.service";
   providers: [
     StatusBar,
     SplashScreen,
-    WorkoutService,
-    RealWorkoutService,
+    {provide: WorkoutService, useClass: WorkoutService},
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

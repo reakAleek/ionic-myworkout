@@ -1,11 +1,14 @@
 import {Workout} from "../models/workout.interface";
 import {Exercise} from "../models/exercise.interface";
 import {Observable} from "rxjs";
+import {Http} from "@angular/http";
+import {Injectable} from "@angular/core";
 
+@Injectable()
 export class WorkoutService {
   private workouts: Workout[] = [];
 
-  constructor() {
+  constructor(private http: Http) {
 
     let exercise1: Exercise = { id: 0, name: "exercise1", description: ""};
     let exercise2: Exercise = { id: 1, name: "exercise2", description: ""};
