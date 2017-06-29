@@ -33,8 +33,20 @@ export class NewWorkoutPage {
     this.workoutForm = this.initForm();
     this.sets = <FormArray>this.workoutForm.controls['sets'];
 
-    console.log(navParams.get("id"));
+    if (navParams.get("id") !== undefined) {
+      this.workoutService.getWorkout(navParams.get("id")).subscribe(data => {
 
+        console.log(data);
+        this.workoutForm.get("name").setValue(data.name);
+        this.id = data.id;
+        data.sets.forEach((i,index) => {
+          this.addSet(i);
+          this.durations[index] = i.duration;
+        });
+      });
+    }
+
+    /*
     if (navParams.get("id") !== undefined) {
       this.workoutService.getWorkout(navParams.get("id")).subscribe(data => {
         console.log(data.name);
@@ -45,7 +57,7 @@ export class NewWorkoutPage {
         });
         this.id = data.id;
       });
-    }
+    }*/
   }
 
   ionViewDidLoad() {
@@ -75,16 +87,24 @@ export class NewWorkoutPage {
     this.sets.splice(indexes.to, 0, element);*/
   }
 
+
+  addSet(set: Set = null) {
+    this.sets.push(this.initSet(set));
+  }
+
   initSet(set: Set = null) {
 
+
     let result = this.formBuilder.group({
-      exercise: this.initExercise(set.exercise),
+      exercise: this.initExercise(),
       duration: this.generateDuration(0,0),
     });
 
     if (set != null) {
+      result.get("exercise").get("name").setValue(set.exercise.name);
       result.get("duration").setValue(set.duration);
     }
+
 
     return result;
   }
@@ -92,7 +112,7 @@ export class NewWorkoutPage {
   initExercise(exercise: Exercise = null) {
 
     let result = this.formBuilder.group({
-      name: ['', Validators.required]
+      name: ['test', Validators.required]
     });
 
     if (exercise != null) {
@@ -100,12 +120,6 @@ export class NewWorkoutPage {
     }
 
     return result;
-  }
-
-
-
-  addSet(set: Set = null) {
-    this.sets.push(this.initSet(set));
   }
 
   removeSet(i: number) {
