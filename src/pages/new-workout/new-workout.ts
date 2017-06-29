@@ -112,7 +112,7 @@ export class NewWorkoutPage {
   initExercise(exercise: Exercise = null) {
 
     let result = this.formBuilder.group({
-      name: ['test', Validators.required]
+      name: ['', Validators.required]
     });
 
     if (exercise != null) {
