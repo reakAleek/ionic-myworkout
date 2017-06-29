@@ -34,7 +34,7 @@ import {HttpModule} from "@angular/http";
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: WorkoutService, useClass: WorkoutService},
+    {provide: WorkoutService, useClass: RealWorkoutService},
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

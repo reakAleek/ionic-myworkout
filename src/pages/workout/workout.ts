@@ -34,7 +34,7 @@ export class WorkoutPage {
   fetchData() {
     clearInterval(this.interval);
 
-    this.workoutService.getWorkout(this.navParams.get('id')).subscribe(
+    this.workoutService.getWorkout(this.navParams.get('name')).subscribe(
       data => {
         this.workout = this.deepCopy(data);
         this.sets = this.deepCopy(data.sets.map(i => ({isActive: false, set: i})));
@@ -59,7 +59,8 @@ export class WorkoutPage {
     let el = this.workout.sets[indexes.from];
     this.workout.sets.splice(indexes.from, 1);
     this.workout.sets.splice(indexes.to, 0, el);
-    this.workoutService.saveWorkout(this.workout);
+    this.currentIndex = indexes.from;
+    this.workoutService.updateWorkout(this.workout);
   }
 
   calculateDuration(ISOString: string): number {
@@ -82,7 +83,7 @@ export class WorkoutPage {
   }
 
   onStartWorkout() {
-    this.reset();
+    //this.reset();
     this.sets[0].isActive = true;
     this.interval = setInterval(() => {
       if (this.currentIndex < this.sets.length && !this.decrementDuration(this.sets[this.currentIndex].set)) {

@@ -16,12 +16,11 @@ export class WorkoutService {
 
 
     let workout : Workout = {
-      id: 0,
       name:"TestWorkout",
       sets: [
-        {id: 0,exercise: exercise1, duration: '2017-06-07T23:00:10.828Z'},
-        {id: 1,exercise: exercise2, duration: '2017-06-07T23:00:15.828Z'},
-        {id: 2,exercise: exercise3, duration: '2017-06-07T23:00:05.828Z'},
+        {id: 0,exercise: "exercise 1", duration: '2017-06-07T23:00:10.828Z'},
+        {id: 1,exercise: "exercise 2", duration: '2017-06-07T23:00:15.828Z'},
+        {id: 2,exercise: "exercise 3", duration: '2017-06-07T23:00:05.828Z'},
       ]
     };
 
@@ -33,31 +32,34 @@ export class WorkoutService {
 
   }
 
-  addWorkout(workout: Workout): Observable<Workout> {
-    workout.id = this.workouts.length;
+  createWorkout(workout: Workout): Observable<Workout> {
+
+    if (this.workouts.filter(i => i.name == workout.name).length > 0) {
+      return Observable.throw({status: 404});
+    }
+
     this.workouts.push(workout);
     return Observable.of(workout);
   }
 
-  saveWorkout(workout: Workout): Observable<Workout> {
-    let tmpWorkout = this.workouts.find(i => i.id == workout.id);
+  updateWorkout(workout: Workout): Observable<Workout> {
+    let tmpWorkout = this.workouts.find(i => i.name == workout.name);
     tmpWorkout.name = workout.name;
     tmpWorkout.sets = workout.sets;
     return Observable.of(workout);
   }
 
-  deleteWorkout(id: number): Observable<any> {
-    this.workouts = this.workouts.filter(i => i.id == id);
+  deleteWorkout(name: string): Observable<any> {
+    this.workouts = this.workouts.filter(i => i.name == name);
     return Observable.of(true);
   }
 
   getWorkouts() : Observable<Workout[]> {
-
     return Observable.of(this.workouts.slice());
   }
 
-  getWorkout(id: number): Observable<Workout> {
-    return Observable.of(this.workouts.find(i => i.id == id));
+  getWorkout(name: string): Observable<Workout> {
+    return Observable.of(this.workouts.find(i => i.name == name));
   }
 
 }

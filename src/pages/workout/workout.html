@@ -21,7 +21,7 @@
 <ion-content>
   <ion-list reorder="true" (ionItemReorder)="reorderItems($event)">
     <ion-item *ngFor="let set of sets" [color]="set.isActive ? 'danger' : 'default'">
-      {{set.set.exercise.name}}
+      {{set.set.exercise}}
       <ion-badge item-end [color]="set.isActive ? 'dark' : 'default'">{{set.set.duration | date:'mm:ss'}}</ion-badge>
     </ion-item>
   </ion-list>

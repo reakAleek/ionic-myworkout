@@ -25,7 +25,7 @@ export class HomePage {
 
   deleteWorkout(index) {
 
-    this.workoutService.deleteWorkout(this.workouts[index].id)
+    this.workoutService.deleteWorkout(this.workouts[index].name)
       .subscribe(
         success => { this.workouts.splice(index, 1); },
         error => { console.log(error) }
@@ -38,12 +38,12 @@ export class HomePage {
       this.navCtrl.push(NewWorkoutPage);
     }
     else {
-      this.navCtrl.push(NewWorkoutPage, {id: this.workouts[index].id});
+      this.navCtrl.push(NewWorkoutPage, {name: this.workouts[index].name});
     }
 
   }
 
   onNavigateToWorkout(index: number) {
-    this.navCtrl.push(WorkoutPage, {id: this.workouts[index].id});
+    this.navCtrl.push(WorkoutPage, {name: this.workouts[index].name});
   }
 }

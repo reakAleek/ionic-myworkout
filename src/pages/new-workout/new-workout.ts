@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {WorkoutService} from "../../services/mockworkout.service";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from 'moment/moment';
@@ -22,42 +22,27 @@ export class NewWorkoutPage {
   private workoutForm: FormGroup;
   private sets: FormArray;
   private durations: string[] = [];
-  private id: number;
-
+  private workoutExists: boolean = false;
   constructor(
     private workoutService: WorkoutService,
     private navCtrl: NavController,
     private navParams: NavParams,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private alertCtrl: AlertController
   ) {
     this.workoutForm = this.initForm();
     this.sets = <FormArray>this.workoutForm.controls['sets'];
+    if (navParams.get("name") !== undefined) {
+      this.workoutService.getWorkout(navParams.get("name")).subscribe(data => {
 
-    if (navParams.get("id") !== undefined) {
-      this.workoutService.getWorkout(navParams.get("id")).subscribe(data => {
-
-        console.log(data);
+        this.workoutExists = true;
         this.workoutForm.get("name").setValue(data.name);
-        this.id = data.id;
         data.sets.forEach((i,index) => {
           this.addSet(i);
           this.durations[index] = i.duration;
         });
       });
     }
-
-    /*
-    if (navParams.get("id") !== undefined) {
-      this.workoutService.getWorkout(navParams.get("id")).subscribe(data => {
-        console.log(data.name);
-        this.workoutForm.get("name").setValue(data.name);
-        data.sets.forEach((i,index) => {
-          this.addSet(i);
-          this.durations[index] = i.duration;
-        });
-        this.id = data.id;
-      });
-    }*/
   }
 
   ionViewDidLoad() {
@@ -96,27 +81,13 @@ export class NewWorkoutPage {
 
 
     let result = this.formBuilder.group({
-      exercise: this.initExercise(),
+      exercise: ['', Validators.required],
       duration: this.generateDuration(0,0),
     });
 
     if (set != null) {
-      result.get("exercise").get("name").setValue(set.exercise.name);
+      result.get("exercise").setValue(set.exercise);
       result.get("duration").setValue(set.duration);
-    }
-
-
-    return result;
-  }
-
-  initExercise(exercise: Exercise = null) {
-
-    let result = this.formBuilder.group({
-      name: ['', Validators.required]
-    });
-
-    if (exercise != null) {
-      result.get("name").setValue(exercise.name);
     }
 
     return result;
@@ -134,17 +105,23 @@ export class NewWorkoutPage {
       }
     });
 
-    if (this.id != null) {
-      workout.id = this.id;
-      this.workoutService.saveWorkout(workout).subscribe(
+    if (this.workoutExists) {
+      this.workoutService.updateWorkout(workout).subscribe(
         success => { this.navCtrl.pop() },
         error => { console.log(error); }
       );
     }
     else {
-      this.workoutService.addWorkout(workout).subscribe(
-        success => { this.navCtrl.pop() },
-        error => { console.log(error) }
+      this.workoutService.createWorkout(workout).subscribe(
+        (success) => { this.navCtrl.pop() },
+        (error) => {
+          let alert = this.alertCtrl.create({
+            title: `Failed`,
+            subTitle: error.toString(),
+            buttons: ['OK']
+          });
+          alert.present();
+        }
       );
     }
   }
