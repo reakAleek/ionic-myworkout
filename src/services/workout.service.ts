@@ -31,7 +31,9 @@ export class RealWorkoutService {
     });
     let options = new RequestOptions({headers: headers});
 
-    return this.http.post(this.url + 'update_workout/', bodyString, options)
+    console.log("update_workout called");
+
+    return this.http.post(this.url + 'update_workout', bodyString, options)
       .map((response: Response) => response.json());
   }
 

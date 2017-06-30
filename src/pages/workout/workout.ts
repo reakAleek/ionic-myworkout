@@ -49,18 +49,22 @@ export class WorkoutPage {
   }
 
   reorderItems(indexes) {
+
     let element = this.sets[indexes.from];
     this.sets.splice(indexes.from, 1);
     this.sets.splice(indexes.to, 0, element);
     this.reorderModel(indexes);
+
+    this.workoutService.updateWorkout(this.workout).subscribe(
+      success => {}
+    );
+
   }
 
   reorderModel(indexes) {
     let el = this.workout.sets[indexes.from];
     this.workout.sets.splice(indexes.from, 1);
     this.workout.sets.splice(indexes.to, 0, el);
-    this.currentIndex = indexes.from;
-    this.workoutService.updateWorkout(this.workout);
   }
 
   calculateDuration(ISOString: string): number {
@@ -83,21 +87,33 @@ export class WorkoutPage {
   }
 
   onStartWorkout() {
-    //this.reset();
-    this.sets[0].isActive = true;
-    this.interval = setInterval(() => {
-      if (this.currentIndex < this.sets.length && !this.decrementDuration(this.sets[this.currentIndex].set)) {
-        if (this.currentIndex >= this.sets.length) {
-          clearInterval(this.interval);
-        } else {
-          this.sets[this.currentIndex++].isActive = false;
-          if (this.currentIndex < this.sets.length) {
-            this.sets[this.currentIndex].isActive = true;
-          }
 
-        }
-      }
-    }, 1000);
+    clearInterval(this.interval);
+
+    this.workoutService.getWorkout(this.navParams.get('name')).subscribe(
+      data => {
+        this.workout = this.deepCopy(data);
+        this.sets = this.deepCopy(data.sets.map(i => ({isActive: false, set: i})));
+        this.currentIndex = 0;
+
+        this.sets[0].isActive = true;
+        this.interval = setInterval(() => {
+          if (this.currentIndex < this.sets.length && !this.decrementDuration(this.sets[this.currentIndex].set)) {
+            if (this.currentIndex >= this.sets.length) {
+              clearInterval(this.interval);
+            } else {
+              this.sets[this.currentIndex++].isActive = false;
+              if (this.currentIndex < this.sets.length) {
+                this.sets[this.currentIndex].isActive = true;
+              }
+
+            }
+          }
+        }, 1000);
+      });
+
+
+
   }
 
 }

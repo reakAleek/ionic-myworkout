@@ -10,10 +10,6 @@ export class WorkoutService {
 
   constructor(private http: Http) {
 
-    let exercise1: Exercise = { id: 0, name: "exercise1", description: ""};
-    let exercise2: Exercise = { id: 1, name: "exercise2", description: ""};
-    let exercise3: Exercise = { id: 3, name: "exercise3", description: ""};
-
 
     let workout : Workout = {
       name:"TestWorkout",
